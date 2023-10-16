@@ -1,0 +1,29 @@
+.account {
+  h1 {
+    color: #232536;
+    text-align: center;
+
+    /* Heading H1 */
+
+    font-family: Sen;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 64px; /* 133.333% */
+    letter-spacing: -2px;
+    padding-top: 69px;
+    padding-bottom: 69px;
+  }
+  button{
+   background-color: red;
+   border: none;
+   color: aliceblue;
+   padding: 10px;
+   border-radius: 10px;
+   margin: 0 auto;
+   display: flex;
+   font-size: 20px;
+   margin-bottom: 24px;
+   cursor: pointer;
+  }
+}
