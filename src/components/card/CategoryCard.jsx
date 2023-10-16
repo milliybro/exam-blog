@@ -77,10 +77,10 @@ const CategoryCard = () => {
 
             <div className="real-card">
               <div className="img_category">
-                <img
-                  src={`${IMG + card?.photo?._id}.${
-                    card?.photo?.name.split(".")[1]
-                  }`}
+                <img src=""
+                  // src={`${IMG + card.photo._id}.${
+                  //   card?.photo?.name.split(".")[1]
+                  // }`}
                 />
               </div>
               <div className="category-text">
