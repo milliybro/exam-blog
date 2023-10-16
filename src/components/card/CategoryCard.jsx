@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 import "swiper/css/pagination";
 
-import { IMG } from "../../const";
+// import { IMG } from "../../const";
 import Slider from "react-slick";
 import { NavLink} from "react-router-dom";
 
