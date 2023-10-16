@@ -42,7 +42,7 @@ const CategoryPage = () => {
 
     getPostsByCategory();
     getCategory();
-  }, [categoryId, activePage, search]);
+  }, [categoryId, activePage, search, posts]);
 
   const handlePageClick = ({ selected }) => {
    setActivePage(selected + 1);
