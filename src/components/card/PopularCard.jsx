@@ -15,12 +15,13 @@ import { NavLink } from "react-router-dom";
 
 const PopularCard = () => {
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null)
   const getPopular = async () => {
     try {
       const { data } = await request.get("post/lastones");
       setData(data);
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   };
   getPopular();

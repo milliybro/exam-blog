@@ -7,12 +7,13 @@ import { trueDate } from "../../../utils/data";
 import "./style.scss";
 const HomePage = () => {
   const [lastone, setLastone] = useState("");
+  const [error, setError] = useState(null)
   async function getLatest() {
     try {
       const { data } = await request.get("post/lastone");
       setLastone(data);
     } catch (error) {
-      console.log(error.name);
+      setError(error.message);
     }
   }
   getLatest();

@@ -14,6 +14,7 @@ import { NavLink} from "react-router-dom";
 
 const CategoryCard = () => {
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null)
   const getPopular = async () => {
     try {
       const {
@@ -21,7 +22,7 @@ const CategoryCard = () => {
       } = await request.get("category");
       setData(data);
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   };
   getPopular();
