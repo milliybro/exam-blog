@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Navigate, NavLink } from "react-router-dom";
 import CategoryCard from "../../../components/card/categoryCard";
 import PopularCard from "../../../components/card/PopularCard";
+import { IMG } from "../../../const";
 import request from "../../../server";
 import { trueDate } from "../../../utils/data";
 import "./style.scss";
 const HomePage = () => {
   const [lastone, setLastone] = useState("");
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
   async function getLatest() {
     try {
       const { data } = await request.get("post/lastone");
@@ -20,11 +21,16 @@ const HomePage = () => {
   const getPostId = (id) => {
     Navigate(`post/${id}`);
   };
+  let homeImage =
+    IMG + lastone?.photo?._id + "." + lastone?.photo?.name.split(".")[1];
   return (
     <main>
       <section
         id="latest"
+        style={{
+          background: `url(${homeImage}) no-repeat center`,
 
+        }}
       >
         <div className="container">
           <div className="latest-text">
@@ -68,4 +74,6 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+const MemoHomePage = memo(HomePage);
+
+export default MemoHomePage;
