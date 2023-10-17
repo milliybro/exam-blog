@@ -8,6 +8,7 @@ import {
 import FrontLayout from "./components/layout/front";
 import { AuthContext } from "./context/AuthContext";
 import AccountPage from "./pages/account";
+import AccountEdit from "./pages/account/accountEdit";
 import DashboardPage from "./pages/admin/dashboard";
 import AboutPage from "./pages/public/about";
 import BlogPage from "./pages/public/blog";
@@ -48,7 +49,14 @@ function App() {
               isAuthenticated ? <AccountPage /> : <Navigate to="/login" />
             }
           />
+          <Route
+            path="/account/edit"
+            element={
+              isAuthenticated ? <AccountEdit /> : <Navigate to="/login" />
+            }
+          />
         </Route>
+        
         {isAuthenticated && role === "admin" ? (
           <Route path="/dashboard" element={<DashboardPage />} />
         ) : null}

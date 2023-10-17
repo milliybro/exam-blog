@@ -12,7 +12,7 @@ request.interceptors.response.use(
   (response) => response,
   (err) => {
     console.log("Err: ", err);
-    console.log(err);
+    console.log(err.message);
 
     return Promise.reject(err);
   }

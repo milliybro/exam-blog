@@ -10,23 +10,17 @@ import "swiper/css/pagination";
 
 // import { IMG } from "../../const";
 import Slider from "react-slick";
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const CategoryCard = () => {
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null)
   const getPopular = async () => {
-    try {
-      const {
-        data: { data },
-      } = await request.get("category");
-      setData(data);
-    } catch (error) {
-      setError(error.message);
-    }
+    const {
+      data: { data },
+    } = await request.get("category");
+    setData(data);
   };
   getPopular();
-
 
   var settings = {
     dots: false,
@@ -68,28 +62,22 @@ const CategoryCard = () => {
     <div className="">
       <Slider {...settings} className="categories">
         {data.map((card) => (
-          <div
-            
-            key={card?._id}
-            className="catecard"
-          >
+          <div key={card?._id} className="catecard">
             <NavLink to={`/category/${card._id}`}>
-
-
-            <div className="real-card">
-              <div className="img_category">
-                <img src=""
-                  // src={`${IMG + card.photo._id}.${
-                  //   card?.photo?.name.split(".")[1]
-                  // }`}
-                />
+              <div className="real-card">
+                <div className="img_category">
+                  <img
+                    src=""
+                    // src={`${IMG + card.photo._id}.${
+                    //   card?.photo?.name.split(".")[1]
+                    // }`}
+                  />
+                </div>
+                <div className="category-text">
+                  <h3>{card.name}</h3>
+                  <p className="popular_text">{card.description}</p>
+                </div>
               </div>
-              <div className="category-text">
-                <h3>{card.name}</h3>
-                <p className="popular_text">{card.description}</p>
-              </div>
-            </div>
-
             </NavLink>
           </div>
         ))}

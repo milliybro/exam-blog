@@ -15,14 +15,9 @@ import { NavLink } from "react-router-dom";
 
 const PopularCard = () => {
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null)
   const getPopular = async () => {
-    try {
-      const { data } = await request.get("post/lastones");
-      setData(data);
-    } catch (error) {
-      setError(error.message);
-    }
+    const { data } = await request.get("post/lastones");
+    setData(data);
   };
   getPopular();
 
@@ -66,7 +61,7 @@ const PopularCard = () => {
     <div>
       <Slider {...settings}>
         {data.map((card) => (
-          <NavLink to={`/post/${card._id}`}  key={card?._id} className="card">
+          <NavLink to={`/post/${card._id}`} key={card?._id} className="card">
             <div className="img_container">
               <img
                 src={`${IMG + card?.photo?._id}.${

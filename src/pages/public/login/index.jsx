@@ -9,7 +9,7 @@ import loginSchema from "../../../schemas/login";
 import request from "../../../server";
 import "./style.scss";
 const LoginPage = () => {
-  const {setSavedUsername} = useContext(AuthContext);
+  const { setSavedUsername } = useContext(AuthContext);
   const navigate = useNavigate();
   const { setIsAuthenticated, setRole, setPassword } = useContext(AuthContext);
 
@@ -33,8 +33,12 @@ const LoginPage = () => {
         setRole(role);
         Cookies.set(TOKEN, token);
         localStorage.setItem(ROLE, role);
-        setSavedUsername(values.username)
+        
+        request.defaults.headers.Authorization = `Bearer ${token}`;
+
+        setSavedUsername(values.username);
         setPassword(values.password);
+
       } catch (err) {
         toast.error(err.response.data);
       }
@@ -69,8 +73,8 @@ const LoginPage = () => {
               placeholder="Password"
             />
             {formik.touched.password && formik.errors.password ? (
-            <p className="error-message">{formik.errors.password}</p>
-          ) : null}
+              <p className="error-message">{formik.errors.password}</p>
+            ) : null}
             <input className="login-btn" type="submit" value="login" />
           </div>
         </form>
