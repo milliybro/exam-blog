@@ -8,14 +8,9 @@ import { trueDate } from "../../../utils/data";
 import "./style.scss";
 const HomePage = () => {
   const [lastone, setLastone] = useState("");
-  const [error, setError] = useState(null);
   async function getLatest() {
-    try {
-      const { data } = await request.get("post/lastone");
-      setLastone(data);
-    } catch (error) {
-      setError(error.message);
-    }
+    const { data } = await request.get("post/lastone");
+    setLastone(data);
   }
   getLatest();
   const getPostId = (id) => {
@@ -29,7 +24,6 @@ const HomePage = () => {
         id="latest"
         style={{
           background: `url(${homeImage}) no-repeat center`,
-
         }}
       >
         <div className="container">
