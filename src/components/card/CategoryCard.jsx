@@ -11,6 +11,7 @@ import "swiper/css/pagination";
 // import { IMG } from "../../const";
 import Slider from "react-slick";
 import { NavLink } from "react-router-dom";
+import { IMG } from "../../const";
 
 const CategoryCard = () => {
   const [data, setData] = useState([]);
@@ -72,10 +73,9 @@ const CategoryCard = () => {
               <div className="real-card">
                 <div className="img_category">
                   <img
-                    src=""
-                    // src={`${IMG + card.photo._id}.${
-                    //   card?.photo?.name.split(".")[1]
-                    // }`}
+                    
+                    src={card.photo === undefined ? 
+                      IMG + card?.photo?._id + "." + card?.photo?.name.split(".")[1] : "https://loremflickr.com/320/240" }
                   />
                 </div>
                 <div className="category-text">

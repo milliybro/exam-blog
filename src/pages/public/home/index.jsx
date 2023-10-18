@@ -20,7 +20,11 @@ const HomePage = () => {
     Navigate(`post/${id}`);
   };
   let homeImage =
-    IMG + lastone?.photo?._id + "." + lastone?.photo?.name.split(".")[1];
+    lastone.photo === undefined ? 
+      IMG + lastone?.photo?._id + "." + lastone?.photo?.name.split(".")[1] : "https://loremflickr.com/320/240" 
+
+    
+  
   return (
     <main>
       <section

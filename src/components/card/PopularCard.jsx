@@ -67,11 +67,11 @@ const PopularCard = () => {
         {data.map((card) => (
           <NavLink to={`/post/${card._id}`} key={card?._id} className="card">
             <div className="img_container">
-              <img
-                src={`${IMG + card?.photo?._id}.${
-                  card?.photo?.name.split(".")[1]
-                }`}
-              />
+            <img
+                    
+                    src={card.photo === undefined ? 
+                      IMG + card?.photo?._id + "." + card?.photo?.name.split(".")[1] : "https://loremflickr.com/320/240" }
+                  />
             </div>
             <div className="popular-text">
               <p>
