@@ -5,12 +5,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Form, Input, Modal, Select, Upload } from "antd";
 import request from "../../../server";
-import LoadingPage from "../../../components/loading/Loading";
 import { IMG } from "../../../const";
 
 const MyPostsPage = () => {
-  const { loading, setLoading } = useState(false);
-  setLoading(loading);
 
   const [category, setCategory] = useState(null);
   const [photoId, setPhotoId] = useState(null);
@@ -19,15 +16,7 @@ const MyPostsPage = () => {
   const [userPost, setUserPost] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   let timerId = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-  //   return () => {
-  //     clearTimeout(timerId);
-  //   };
-  // }, [setLoading]);
+
 
   const [form] = Form.useForm();
 
@@ -107,10 +96,7 @@ const MyPostsPage = () => {
 
   return (
     <Fragment>
-      {loading ? (
-        <LoadingPage />
-      ) : (
-        <section id="my-posts">
+       <section id="my-posts">
           <div className="container my-posts">
             <div className="my-posts__header">
               <h1 className="my-posts__title">All posts</h1>
@@ -231,7 +217,6 @@ const MyPostsPage = () => {
             </Modal>
           </div>
         </section>
-      )}
     </Fragment>
   );
 };
