@@ -1,222 +1,142 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
-
-import "./style.scss";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Form, Input, Modal, Select, Upload } from "antd";
+import { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
+import { NavLink } from "react-router-dom";
+import { IMG, LIMIT } from "../../../const";
 import request from "../../../server";
-import { IMG } from "../../../const";
+import React from 'react';
+import Modal from 'react-modal';
+import "./style.scss";
 
-const MyPostsPage = () => {
-  const [category, setCategory] = useState(null);
-  const [photoId, setPhotoId] = useState(null);
-  const [categories, setCategories] = useState(null);
-  const [sortedCategories, setSortedCategories] = useState([]);
-  const [userPost, setUserPost] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
-  const [form] = Form.useForm();
+// Modal.setAppElement('#yourAppElement');
 
-  const UserPost = useCallback( async () => {
-    try {
-      let { data } = await request.get("post/user");
-      setUserPost(data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [])
+const PostsPage = () => {
+
+  let subtitle;
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = '#f00';
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+  const [posts, setPosts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [total, setTotal] = useState(null);
+  const [activePage, setActivePage] = useState(1);
 
   useEffect(() => {
-    UserPost();
-  }, [UserPost]);
+    const getAllPosts = async () => {
+      try {
+        let { data } = await request.get(
+          `post/user?limit=${LIMIT}&page=${activePage}&search=${search}`
+        );
+        setPosts(data.data);
+        setTotal(data.pagination.total);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAllPosts();
+  }, [activePage, search]);
+  console.log(posts);
+const handlePageClick = ({ selected }) => {
+   setActivePage(selected + 1);
+ };
 
-
-
-  useEffect(() => {
-    let options;
-    options = categories?.map((category) => {
-      return {
-        value: category?._id,
-        label: category?.name,
-      };
-    });
-    setSortedCategories(options);
-
-    
-    UserPost();
-  }, [categories, UserPost]);
-  
-  const getCategories = async () => {
-    try {
-      let { data } = await request.get("category");
-      setCategories(data?.data);
-    } catch (err) {
-      toast.error(err);
-    }
-
-  };
-
-  useEffect(()=>{
-    getCategories()
-  }, [])
-  const handleOk = async () => {
-    try {
-      let values = await form.validateFields();
-      let res = await request.post("post", {
-        ...values,
-        photo: photoId,
-      });
-      console.log(res);
-    } catch (err) {
-      toast.error(err.response.data);
-    }
-    setIsModalOpen(false);
-  };
-
-  const showModal = () => {
-    form.resetFields();
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleChange = (value) => {
-    console.log(value);
-    setCategory(value);
-  };
-
-  const uploadPhoto = async (e) => {
-    let form = new FormData();
-    form.append("photo", e.file.originFileObj);
-    console.log(res);
-    let res = await request.post("upload", form);
-    setPhotoId(res?.data.split(".")[0].split("_")[1]);
-  };
-
+ let pages = Math.ceil(total / LIMIT);
+ let pagination =
+    pages !== 1 ? (
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="Next"
+        previousLabel="Previous"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+        pageRangeDisplayed={5}
+        pageCount={pages}
+        renderOnZeroPageCount={null}
+        onPageChange={handlePageClick}
+      />
+    ) : null;
   return (
-    <Fragment>
-      <section id="my-posts">
-        <div className="container my-posts">
-          <div className="my-posts__header">
-            <h1 className="my-posts__title">All posts</h1>
-            <button onClick={showModal} className="add-post-btn">
-              Add post
-            </button>
-          </div>
-          <input
-            name="search"
-            placeholder="Searching..."
-            className="search-input"
-            type="text"
-          />
-          <div className="line"></div>
-          <div className="posts-row">
-            {userPost?.map((post) => (
-              <div key={post?._id} className="post-card">
-                <Link
-                  title="Click the image to read more"
-                  to={`/blog-post/${post?._id}`}
-                  className="post-image"
-                >
-                  <img
-                    src={`${IMG + post?.photo?._id}.${
-                      post?.photo?.name.split(".")[1]
-                    }`}
-                    alt=""
-                  />
-                </Link>
-                <div className="post-info">
-                  <p className="post-subtitle">{post?.category.name}</p>
-                  <h3 className="post-title">{post?.title}</h3>
-                  <p className="post-desc">{post?.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Modal
-            title="Create your post"
-            open={isModalOpen}
-            onOk={handleOk}
-            okText="Add post"
-            onCancel={handleCancel}
-          >
-            <Form
-              id="post-form"
-              name="Post"
-              form={form}
-              labelCol={{
-                span: 24,
-              }}
-              wrapperCol={{
-                span: 24,
-              }}
-              style={{
-                maxWidth: 700,
-              }}
-              autoComplete="off"
-            >
-              <Form.Item
-                label="Title"
-                name="title"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please fill!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Category"
-                name="category"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please fill!",
-                  },
-                ]}
-              >
-                <Select
-                  value={category}
-                  style={{
-                    width: "100%",
-                  }}
-                  onChange={handleChange}
-                  options={sortedCategories}
+    <section id="posts">
+      <div className="container">
+        <input
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          type="text"
+          placeholder="Searching..."
+        />
+        <h1>My posts</h1>
+        <button onClick={openModal}>Open Modal</button>
+        <hr className="hr" />
+        <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
+        <button onClick={closeModal}>close</button>
+        <div>I am a modal</div>
+        <form>
+          <input />
+          <button>tab navigation</button>
+          <button>stays</button>
+          <button>inside</button>
+          <button>the modal</button>
+        </form>
+      </Modal>
+        <div className="posts-row">
+          {posts.map((posts) => (
+            <NavLink to={`/post/${posts._id}`} key={posts?._id} className="post-card">
+              <div className="post-image">
+                <img
+                  src={`${IMG + posts?.photo?._id}.${
+                     posts?.photo?.name.split(".")[1]
+                   }`}
+                  alt=""
                 />
-              </Form.Item>
-
-              <Form.Item
-                label="Description"
-                name="description"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please fill!",
-                  },
-                ]}
-              >
-                <Input.TextArea />
-              </Form.Item>
-              <Form.Item label="Image*" name="photo">
-                <Upload
-                  name="avatarcha"
-                  className="avatar-uploader"
-                  showUploadList={false}
-                  onChange={uploadPhoto}
-                >
-                </Upload>
-              </Form.Item>
-            </Form>
-          </Modal>
+              </div>
+              <div className="blogcha">
+                <h5>{posts?.category.name}</h5>
+                <h3>{posts?.title}</h3>
+                <p>{posts?.description}</p>
+              </div>
+            </NavLink>
+          ))}
         </div>
-      </section>
-    </Fragment>
+        {pagination}
+      </div>
+    </section>
   );
 };
 
-export default MyPostsPage;
+export default PostsPage;

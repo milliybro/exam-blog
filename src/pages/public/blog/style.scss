@@ -37,6 +37,7 @@
     grid-template-columns: 40% 60%;
     grid-gap: 36px;
     margin-bottom: 64px;
+    background-color: rgb(252, 246, 237);
     @media (max-width: 600px){
       grid-template-columns: repeat(1,1fr);
     }
