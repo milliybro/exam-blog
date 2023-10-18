@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Navigate, NavLink } from "react-router-dom";
 import CategoryCard from "../../../components/card/categoryCard";
 import PopularCard from "../../../components/card/PopularCard";
@@ -12,7 +12,10 @@ const HomePage = () => {
     const { data } = await request.get("post/lastone");
     setLastone(data);
   }
-  getLatest();
+  useEffect(()=>{
+
+    getLatest();
+  })
   const getPostId = (id) => {
     Navigate(`post/${id}`);
   };

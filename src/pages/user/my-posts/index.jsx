@@ -10,6 +10,7 @@ import { IMG } from "../../../const";
 
 const MyPostsPage = () => {
   const { loading, setLoading } = useState(false);
+  setLoading(loading);
 
   const [category, setCategory] = useState(null);
   const [photoId, setPhotoId] = useState(null);
@@ -17,8 +18,7 @@ const MyPostsPage = () => {
   const [sortedCategories, setSortedCategories] = useState([]);
   const [userPost, setUserPost] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-  const [uploadedImage, setUploadedImage] = useState(null);
+
   // useEffect(() => {
   //   setLoading(true);
   //   let timerId = setTimeout(() => {
@@ -102,22 +102,7 @@ const MyPostsPage = () => {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    try {
-      const form = new FormData();
-      form.append("file", e.target.files[0]);
-      let res = await request.post("upload", form);
-      setUploadedImage(res?.data?._id);
 
-      console.log("imageurl:", uploadedImage);
-      const imageUrl = `${IMG + res?.data?._id}.${
-        res?.data?.name.split(".")[1]
-      }`;
-      setImagePreviewUrl(imageUrl);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
 
   return (
@@ -149,9 +134,9 @@ const MyPostsPage = () => {
                     className="post-image"
                   >
                     <img
-                      // src={`${ENDPOINT}upload/${post?.photo._id}.${
-                      //   post?.photo.name.split(".")[1]
-                      // }`}
+                      src={`${IMG + post?.photo?._id}.${
+                        post?.photo?.name.split(".")[1]
+                      }`}
                       alt=""
                     />
                   </Link>

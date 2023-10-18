@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import request from "../../server";
 
 import "./popular.scss";
@@ -19,7 +19,11 @@ const PopularCard = () => {
     const { data } = await request.get("post/lastones");
     setData(data);
   };
-  getPopular();
+
+  useEffect(()=>{
+    getPopular();
+
+  })
 
   var settings = {
     dots: false,

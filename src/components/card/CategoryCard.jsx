@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import request from "../../server";
 
 import "./category.scss";
@@ -14,13 +14,18 @@ import { NavLink } from "react-router-dom";
 
 const CategoryCard = () => {
   const [data, setData] = useState([]);
+
   const getPopular = async () => {
     const {
       data: { data },
     } = await request.get("category");
     setData(data);
   };
-  getPopular();
+
+  useEffect(()=>{
+    getPopular();
+
+  }, [])
 
   var settings = {
     dots: false,

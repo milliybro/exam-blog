@@ -11,9 +11,7 @@ const request = axios.create({
 request.interceptors.response.use(
   (response) => response,
   (err) => {
-    console.log("Err: ", err);
-    console.log(err.message);
-
+    // console.log("Err: ", err);
     return Promise.reject(err);
   }
 );
