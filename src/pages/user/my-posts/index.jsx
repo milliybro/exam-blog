@@ -81,14 +81,12 @@ const MyPostsPage = () => {
   };
 
   const uploadPhoto = async (e) => {
-    try {
-      let formData = new FormData();
-      formData.append("file", e.file.originFileObj);
-      let response = await request.post("upload", formData);
-      setPhotoId(response?.data.split(".")[0].split("_")[1]);
-    } catch (err) {
-      console.log(err.response.data);
-    }
+      let form = new FormData();
+      form.append("photo", e.file.originFileObj);
+      console.log(res);
+      let res = await request.post("upload", form);
+      setPhotoId(res?.data.split(".")[0].split("_")[1]);
+
   };
 
 
@@ -158,12 +156,12 @@ const MyPostsPage = () => {
                 autoComplete="off"
               >
                 <Form.Item
-                  label="Post title"
+                  label="Title"
                   name="title"
                   rules={[
                     {
                       required: true,
-                      message: "Please include your title!",
+                      message: "Please fill!",
                     },
                   ]}
                 >
@@ -195,7 +193,7 @@ const MyPostsPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please include description!",
+                      message: "Please fill!",
                     },
                   ]}
                 >

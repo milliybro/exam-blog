@@ -13,17 +13,17 @@ import Slider from "react-slick";
 import { trueDate } from "../../utils/data";
 import { NavLink } from "react-router-dom";
 
-const PopularCard = () => {
+const PopularCard =  () => {
   const [data, setData] = useState([]);
   const getPopular = async () => {
-    const { data } = await request.get("post/lastones");
+   let {data}= await request.get("post/lastones");
     setData(data);
   };
 
   useEffect(()=>{
-    getPopular();
+    getPopular()
 
-  })
+  },[])
 
   var settings = {
     dots: false,

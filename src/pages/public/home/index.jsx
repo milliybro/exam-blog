@@ -7,24 +7,22 @@ import request from "../../../server";
 import { trueDate } from "../../../utils/data";
 import "./style.scss";
 const HomePage = () => {
-  const [lastone, setLastone] = useState("");
-  async function getLatest() {
+  const [lastone, setLastone] = useState({});
+
+  const getLatest = async () => {
     const { data } = await request.get("post/lastone");
     setLastone(data);
-  }
-  useEffect(()=>{
-
-    getLatest();
-  })
+  };
   const getPostId = (id) => {
     Navigate(`post/${id}`);
   };
-  let homeImage =
-    lastone.photo  ? 
-      IMG + lastone?.photo?._id + "." + lastone?.photo?.name.split(".")[1] : "https://loremflickr.com/320/240" 
+  useEffect(() => {
+    getLatest();
+  },[]);
+  let homeImage = lastone.photo
+    ? IMG + lastone?.photo?._id + "." + lastone?.photo?.name.split(".")[1]
+    : "https://loremflickr.com/320/240";
 
-    
-  
   return (
     <main>
       <section
