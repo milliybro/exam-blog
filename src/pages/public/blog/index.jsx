@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { NavLink } from "react-router-dom";
 import { IMG, LIMIT } from "../../../const";
 import request from "../../../server";
 import "./style.scss";
@@ -66,7 +67,7 @@ const handlePageClick = ({ selected }) => {
         <hr className="hr" />
         <div className="posts-row">
           {posts.map((posts) => (
-            <div key={posts?._id} className="post-card">
+            <NavLink to={`/post/${posts._id}`} key={posts?._id} className="post-card">
               <div className="post-image">
                 <img
                   src={`${IMG + posts?.photo?._id}.${
@@ -80,7 +81,7 @@ const handlePageClick = ({ selected }) => {
                 <h3>{posts?.title}</h3>
                 <p>{posts?.description}</p>
               </div>
-            </div>
+            </NavLink>
           ))}
         </div>
         {pagination}

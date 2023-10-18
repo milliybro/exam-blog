@@ -51,7 +51,7 @@ const HomePage = () => {
               <NavLink
                 onClick={() => getPostId(`${lastone._id}`)}
                 className="lastone-btn"
-                to=""
+                to={`/post/${lastone._id}`}
               >
                 Read More{" "}
               </NavLink>
