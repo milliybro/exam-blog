@@ -69,7 +69,7 @@ const PopularCard = () => {
             <div className="img_container">
             <img
                     
-                    src={card.photo === undefined ? 
+                    src={card.photo !== null ? 
                       IMG + card?.photo?._id + "." + card?.photo?.name.split(".")[1] : "https://loremflickr.com/320/240" }
                   />
             </div>

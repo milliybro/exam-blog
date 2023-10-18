@@ -74,7 +74,7 @@ const CategoryCard = () => {
                 <div className="img_category">
                   <img
                     
-                    src={card.photo === undefined ? 
+                    src={card.photo === null ? 
                       IMG + card?.photo?._id + "." + card?.photo?.name.split(".")[1] : "https://loremflickr.com/320/240" }
                   />
                 </div>
