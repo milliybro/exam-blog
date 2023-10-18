@@ -44,7 +44,7 @@ const MyPostsPage = () => {
         let { data } = await request.get("category");
         setCategories(data?.data);
       } catch (err) {
-        toast.error(err.response.data);
+        toast.error(err);
       }
     };
 
