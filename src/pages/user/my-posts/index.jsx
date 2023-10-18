@@ -175,7 +175,7 @@ const MyPostsPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please include your title!",
+                      message: "Please fill!",
                     },
                   ]}
                 >
@@ -188,9 +188,7 @@ const MyPostsPage = () => {
                     options={sortedCategories}
                   />
                 </Form.Item>
-                <Form.Item label="Popular tags" name="tags">
-                  <Input />
-                </Form.Item>
+                
                 <Form.Item
                   label="Description"
                   name="description"
