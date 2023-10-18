@@ -1,55 +1,71 @@
 import { Tabs, Tab, TabPanel, TabList } from "react-tabs";
-import "./style.scss";
 import "react-tabs/style/react-tabs.css";
-import { useState } from "react";
-import { useFormik } from "formik";
-import registerSchema from "../../schemas/register";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import request from "../../server";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import { ROLE, TOKEN } from "../../const";
-import { toast } from "react-toastify";
 
+import { IMG } from "../../const";
+import editUserSchema from "../../schemas/editUser";
+import { AuthContext } from "../../context/AuthContext";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import passwordSchema from "../../schemas/password";
 const AccountEdit = () => {
+  const navigate = useNavigate();
+
   const [file, setFile] = useState();
   function handleChange(e) {
     setFile(URL.createObjectURL(e.target.files[0]));
   }
-  const navigate = useNavigate();
+  const { user, getUser } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(editUserSchema) });
 
-  const formik = useFormik({
-    initialValues: {
-      first_name: "",
-      last_name: "",
-      username: "",
-      password: "",
-      confirm: "",
-    },
-    validationSchema: registerSchema,
-    onSubmit: async (values) => {
-      try {
-        if (values.password === values.confirm) {
-          const {
-            data: { token, role },
-          } = await request.post(`/auth/register`, values);
-          if (role === "user") {
-            navigate("/my-posts");
-          } else {
-            navigate("/dashboard");
-          }
-          Cookies.set(TOKEN, token);
-          localStorage.setItem(ROLE, role);
-          toast.success("You are registrated !");
-          navigate("/login");
-        } else {
-          toast.error("Please confirm your password");
-        }
-      } catch (err) {
-        toast.error(err.response.data);
+  const {
+    register: rgs,
+    handleSubmit: hlsm,
+    formState: { errors: err },
+  } = useForm({ resolver: yupResolver(passwordSchema) });
+
+  useEffect(() => {
+    const getEdit = async () => {
+      await request.get(`auth/me`);
+      const newUser = { ...user, ["birthday"]: user?.birthday?.split("T")[0] };
+      reset({ ...newUser });
+    };
+    getEdit();
+  }, [user, getUser, reset]);
+
+  const getPassword = async (password) => {
+    try {
+      if (password.newPassword === password.confirmPassword) {
+        await request.put(`auth/password`, password);
+        console.log(password);
+        toast.success("Yorvordiz");
+        navigate(`/account`);
+      } else {
+        toast.error("Unaqa bolmaydida");
       }
-    },
-  });
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
+
+  const postData = async (data) => {
+    await request.put(`auth/details`, data);
+    getUser();
+    navigate(`/account`);
+    toast.success("Chotki");
+  };
+
+  
+
   return (
     <div className=" container editAccount">
       <Tabs>
@@ -62,149 +78,138 @@ const AccountEdit = () => {
           <div className="editUser">
             <form
               autoComplete="off"
-              onSubmit={formik.handleSubmit}
+              onSubmit={handleSubmit(postData)}
               className=""
             >
-              <div className="edit-inputs">
-              <div className="imgedit">
-                <img className="editUserImg" src={file} />
-                <input
-                  className="editUserInput"
-                  type="file"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="edit-acc-inputs">
-                <div>
-                  <label htmlFor="">First Name</label>
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.first_name}
-                    type="text"
-                    name="first_name"
-                    placeholder="First name"
-                    className="login-input"
+              <div className="user-inputs">
+                <div className="imgedit">
+                  <img
+                    className="editUserImg"
+                    src={file ? file : `${IMG}${user?.photo}`}
                   />
-                  {formik.touched.first_name && formik.errors.first_name ? (
-                    <p className="error-message">{formik.errors.first_name}</p>
-                  ) : null}
+                  <input
+                    className="editUserInput"
+                    type="file"
+                    onChange={handleChange}
+                  />
                 </div>
-                <div>
-                  <label htmlFor="">Last Name</label>
+                <div className="user-acc-inputs">
+                  <div>
+                    <label htmlFor="">First Name</label>
+                    <input
+                      {...register("first_name")}
+                      type="text"
+                      name="first_name"
+                      placeholder="First name"
+                      className="login-input"
+                    />
+                    {errors.first_name ? (
+                      <p className="text-danger">{errors.first_name.message}</p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Last Name</label>
 
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.last_name}
-                    type="text"
-                    name="last_name"
-                    placeholder="Last name"
-                    className="login-input"
-                  />
-                  {formik.touched.last_name && formik.errors.last_name ? (
-                    <p className="error-message">{formik.errors.last_name}</p>
-                  ) : null}
-                </div>
-                <div>
-                  <label htmlFor="">Username</label>
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.username}
-                    required
-                    name="username"
-                    type="text"
-                    placeholder="Username"
-                    className="login-input"
-                  />
-                  {formik.touched.username && formik.errors.username ? (
-                    <p className="error-message">{formik.errors.username}</p>
-                  ) : null}
-                </div>
+                    <input
+                      {...register("last_name")}
+                      type="text"
+                      name="last_name"
+                      placeholder="Last name"
+                      className="login-input"
+                    />
+                    {errors.last_name ? (
+                      <p className="text-danger">{errors.last_name.message}</p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Username</label>
+                    <input
+                      {...register("username")}
+                      required
+                      name="username"
+                      type="text"
+                      placeholder="Username"
+                      className="login-input"
+                    />
+                    {errors.username ? (
+                      <p className="text-danger">{errors.username.message}</p>
+                    ) : null}
+                  </div>
 
-                <div>
-                  <label htmlFor="">Info</label>
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.info}
-                    required
-                    name="info"
-                    type="text"
-                    placeholder="Information"
-                    className="login-input"
-                  />
-                  {formik.touched.info && formik.errors.info ? (
-                    <p className="error-message">{formik.errors.info}</p>
-                  ) : null}
-                </div>
-                <div>
-                  <label htmlFor="">Phone Number</label>
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.phoneNumber}
-                    required
-                    name="info"
-                    type="text"
-                    placeholder="Phone Number"
-                    className="login-input"
-                  />
-                  {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                    <p className="error-message">{formik.errors.phoneNumber}</p>
-                  ) : null}
-                </div>
-                <div>
-                  <label htmlFor="">Birthday</label>
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.birthday}
-                    required
-                    name="birthday"
-                    type="text"
-                    placeholder="Birthday"
-                    className="login-input"
-                  />
-                  {formik.touched.birthday && formik.errors.birthday ? (
-                    <p className="error-message">{formik.errors.birthday}</p>
-                  ) : null}
-                </div>
-                <div>
-                  <label htmlFor="">Address</label>
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.address}
-                    required
-                    name="address"
-                    type="text"
-                    placeholder="Address"
-                    className="login-input"
-                  />
-                  {formik.touched.address && formik.errors.address ? (
-                    <p className="error-message">{formik.errors.address}</p>
-                  ) : null}
-                </div>
-                <div>
-                  <label htmlFor="">Email</label>
+                  <div>
+                    <label htmlFor="">Info</label>
+                    <input
+                      {...register("info")}
+                      required
+                      name="info"
+                      type="text"
+                      placeholder="Information"
+                      className="login-input"
+                    />
+                    {errors.info ? (
+                      <p className="text-danger">{errors.info.message}</p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Phone Number</label>
+                    <input
+                      {...register("phoneNumber")}
+                      required
+                      name="phoneNumber"
+                      type="text"
+                      placeholder="Phone Number"
+                      className="login-input"
+                    />
+                    {errors.phoneNumber ? (
+                      <p className="text-danger">
+                        {errors.phoneNumber.message}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Birthday</label>
+                    <input
+                      {...register("birthday")}
+                      required
+                      name="birthday"
+                      type="date"
+                      placeholder="Birthday"
+                      className="login-input"
+                    />
+                    {errors.birthday ? (
+                      <p className="text-danger">{errors.birthday.message}</p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Address</label>
+                    <input
+                      {...register("address")}
+                      required
+                      name="address"
+                      type="text"
+                      placeholder="Address"
+                      className="login-input"
+                    />
+                    {errors.address ? (
+                      <p className="text-danger">{errors.address.message}</p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Email</label>
 
-                  <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                    required
-                    name="email"
-                    type="text"
-                    placeholder="Email"
-                    className="login-input"
-                  />
-                  {formik.touched.email && formik.errors.email ? (
-                    <p className="error-message">{formik.errors.email}</p>
-                  ) : null}
+                    <input
+                      {...register("email")}
+                      required
+                      name="email"
+                      type="text"
+                      placeholder="Email"
+                      className="login-input"
+                    />
+                    {errors.email ? (
+                      <p className="text-danger">{errors.email.message}</p>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
               </div>
 
               <input
@@ -217,7 +222,66 @@ const AccountEdit = () => {
           </div>
         </TabPanel>
         <TabPanel>
-          <h2>Any content 2</h2>
+          <div className="editUser">
+            <form autoComplete="off" onSubmit={hlsm(getPassword)} className="">
+              <div className="user-input">
+                <div className="user-acc-input">
+                  <div>
+                    <label htmlFor="">Password</label>
+                    <input
+                      {...rgs("currentPassword")}
+                      type="text"
+                      name="currentPassword"
+                      placeholder="current password"
+                      className="login-input"
+                    />
+                    {err.currentPassword ? (
+                      <p className="text-danger">
+                        {err.currentPassword.message}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">New Password</label>
+
+                    <input
+                      {...rgs("newPassword")}
+                      type="text"
+                      name="newPassword"
+                      placeholder="New Password"
+                      className="login-input"
+                    />
+                    {err.newPassword ? (
+                      <p className="text-danger">{err.newPassword.message}</p>
+                    ) : null}
+                  </div>
+                  <div>
+                    <label htmlFor="">Confirm Password</label>
+                    <input
+                      {...rgs("confirmPassword")}
+                      required
+                      name="confirmPassword"
+                      type="text"
+                      placeholder="Confirm Password"
+                      className="login-input"
+                    />
+                    {err.confirmPassword ? (
+                      <p className="text-danger">
+                        {err.confirmPassword.message}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              <input
+                className="login-btn"
+                type="submit"
+                value="Save"
+                onClick={() => {}}
+              />
+            </form>
+          </div>
         </TabPanel>
       </Tabs>
     </div>

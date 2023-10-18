@@ -36,7 +36,7 @@ function App() {
           <Route
             path="/my-posts"
             element={
-              isAuthenticated && role === "user" ? (
+              isAuthenticated && role === "user" || role === "admin" ? (
                 <MyPostsPage />
               ) : (
                 <Navigate to="/login" />

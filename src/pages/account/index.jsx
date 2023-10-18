@@ -28,7 +28,6 @@ const AccountPage = () => {
   }, [])
   
 
-console.log(account);
   return (
     <section id="account-form">
       <div className="container account">

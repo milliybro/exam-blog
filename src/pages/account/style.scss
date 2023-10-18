@@ -1,9 +1,9 @@
 #account-form {
   padding-top: 0px;
-  width: 100%;
+  // width: 100%;
 }
 .account {
-  width: 100%;
+  // width: 100%;
   h1 {
     color: #232536;
     text-align: center;
@@ -56,6 +56,15 @@
         padding-left: 10px;
         color: #000;
       }
+    }
+  }
+  @media (max-width:1000px){
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+    .account-text{
+      margin: 0 auto;
+
+      text-align: center;
     }
   }
 }
@@ -152,15 +161,104 @@
     
   }
 }
-.edit-inputs{
+.user-inputs{
   display: grid;
   grid-template-columns: 40% 60%;
-
+  @media (max-width:868px){
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+    margin: 0 auto;
+    width: 100%;
+    .imgedit{
+      margin: 0 auto;
+    }
+  }
 }
 
-.edit-acc-inputs {
+.user-acc-inputs {
   display: grid;
   grid-template-columns: repeat(2,1fr);
+  column-gap: 40px;
+  .login-input {
+    margin-bottom: 19px;
+    width: 92%;
+    padding: 24px;
+    color: var(--Black, #232536);
+
+    /* Body 1 */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px; /* 175% */
+    &::placeholder {
+      color: var(--Black, #232536);
+
+      /* Body 1 */
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 28px; /* 175% */
+    }
+    @media (max-width:600px){
+      display: flex;
+      margin: 0 auto;
+      width: 50%;
+      gap: 19px !important;
+      margin-bottom: 20px;
+      
+    }
+  }
+  @media (max-width:1200px){
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+    margin: 0 auto;
+    width: 70%;
+  }
+}
+.editUser{
+  .imgedit{
+    display: flex;
+    flex-direction: column;
+  }
+}
+.login-inputcha {
+  display: block;
+  margin-bottom: 19px;
+  width: 92%;
+  padding: 12px;
+  color: var(--Black, #232536);
+
+  /* Body 1 */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px; /* 175% */
+  &::placeholder {
+    color: var(--Black, #232536);
+
+    /* Body 1 */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px; /* 175% */
+  }
+  @media (max-width:600px){
+    display: flex;
+    margin: 0 auto;
+    width: 50%;
+    gap: 19px !important;
+    margin-bottom: 20px;
+    
+  }
+}
+.user-acc-input {
+  width: 50%;
+  margin: 0 auto;
+  display: grid;
   column-gap: 40px;
   .login-input {
     margin-bottom: 19px;
@@ -250,4 +348,19 @@
 }
 .editUserInput:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.acccount-text{
+  @media (max-width:1400px){
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+  }
+}
+
+.account-info .account-text {
+  @media (max-width:1400px){
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+  }
+
 }
