@@ -18,7 +18,8 @@ import LoginPage from "./pages/public/login";
 import NotFoundPage from "./pages/public/not-found";
 import PostPage from "./pages/public/post";
 import RegisterPage from "./pages/public/register";
-import MyPostsPage from "./pages/user/my-posts";
+import MyPostsPage from "./pages/user/my-posts/my-blog";
+// import MyPostsPage from "./pages/user/my-posts";
 
 function App() {
   const { isAuthenticated, role } = useContext(AuthContext);
